@@ -1,3 +1,5 @@
+== NSDate+W3CDTFSupport
+
 @interface NSDate (W3CDTFSupport)
 +(NSDate*) dateWithW3CDTFString:(NSString*)dateAndTimeFormat;
 @end
