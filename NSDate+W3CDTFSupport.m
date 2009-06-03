@@ -1,7 +1,7 @@
 //
 //  NSDate+W3CDTFSupport.m
 //
-//  Version    0.0.1
+//  Version    0.0.2
 //  Copyright  2009+, ODA Kaname (http://www.trashsuite.org/)
 //  License    MIT License; http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license
 //
@@ -17,23 +17,33 @@
 +(NSDate*) dateWithW3CDTFString:(NSString*)dateAndTimeFormat
 {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
-
-  // セパレータが見つからなければ終了
   NSRange separator = [dateAndTimeFormat rangeOfString:@"T"];
-  if(separator.location == NSNotFound) return nil;
+  NSString *timeString, *dateString;
 
-  NSString *date = [dateAndTimeFormat substringToIndex:separator.location];
-  NSString *time = [dateAndTimeFormat substringFromIndex:separator.location + 1];
+  // セパレータが見つからなければ UTC として扱う
+  if(separator.location == NSNotFound) {
+    NSArray *dateArray = [dateAndTimeFormat componentsSeparatedByString:@"-"];
+    dateString = [NSString stringWithFormat:@"%@-%@-%@",
+      [dateArray objectAtIndex:0],
+      ([dateArray count] >= 2) ? [dateArray objectAtIndex:1] : @"01",
+      ([dateArray count] >= 3) ? [dateArray objectAtIndex:2] : @"01"
+    ];
+    timeString = @"00:00:00Z";
+  // セパレータが見つからなければ UTC として扱う
+  } else {
+    dateString = [dateAndTimeFormat substringToIndex:separator.location];
+    timeString = [dateAndTimeFormat substringFromIndex:separator.location + 1];
+  }
 
   // 日付を取得
-  NSArray *dateArray = [date componentsSeparatedByString:@"-"];
+  NSArray *dateArray = [dateString componentsSeparatedByString:@"-"];
   NSInteger year     = [[dateArray objectAtIndex:0] intValue];
   NSInteger month    = [[dateArray objectAtIndex:1] intValue];
   NSInteger day      = [[dateArray objectAtIndex:2] intValue];
 
-  NSRange tzUTC   = [time rangeOfString:@"Z"];
-  NSRange tzPlus  = [time rangeOfString:@"+"];
-  NSRange tzMinus = [time rangeOfString:@"-"];
+  NSRange tzUTC   = [timeString rangeOfString:@"Z"];
+  NSRange tzPlus  = [timeString rangeOfString:@"+"];
+  NSRange tzMinus = [timeString rangeOfString:@"-"];
 
   NSInteger offsetSign = 1;
   NSInteger offsetHour, offsetMin;
@@ -41,14 +51,14 @@
 
   // UTC
   if(tzUTC.location != NSNotFound) {
-    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:time range:tzUTC];
+    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:timeString range:tzUTC];
   // +XX:XX
   } else if (tzPlus.location != NSNotFound) {
-    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:time range:tzPlus];
+    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:timeString range:tzPlus];
   // -XX:XX
   } else if (tzMinus.location != NSNotFound) {
     offsetSign  = -1;
-    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:time range:tzMinus];
+    timeDictionary = [[self class] W3CDTF_timeDictionaryWithString:timeString range:tzMinus];
   } else {
     return nil;
   }

@@ -5,6 +5,9 @@ int main(int argc, char **argv)
 {
   NSAutoreleasePool * pool = [NSAutoreleasePool new];
   NSArray *dateStringArray = [NSArray arrayWithObjects:
+    @"2008",
+    @"2008-08",
+    @"2008-08-19",
     @"2008-08-19T00:00:00Z",
     @"2001-08-02T10:45:23+09:00",
     @"2000-08-01T00:00:00-05:00",
