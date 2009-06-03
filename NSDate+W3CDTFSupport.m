@@ -29,7 +29,7 @@
       ([dateArray count] >= 3) ? [dateArray objectAtIndex:2] : @"01"
     ];
     timeString = @"00:00:00Z";
-  // セパレータが見つからなければ UTC として扱う
+  // セパレータが見つかれば日時を分割
   } else {
     dateString = [dateAndTimeFormat substringToIndex:separator.location];
     timeString = [dateAndTimeFormat substringFromIndex:separator.location + 1];
