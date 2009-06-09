@@ -1,8 +1,11 @@
 == NSDate+W3CDTFSupport
 
 @interface NSDate (W3CDTFSupport)
-+(NSDate*) dateWithW3CDTFString:(NSString*)dateAndTimeFormat;
++(NSDate*)   dateWithW3CDTFString:(NSString*)dateAndTimeFormat;
+-(NSString*) getW3CDTFString;
 @end
 
 NSString *dateString = @"2008-08-19T00:00:00Z";
 NSDate         *date = [NSDate dateWithW3CDTFString:dateString];
+
+[[NSDate new] getW3CDTFString];

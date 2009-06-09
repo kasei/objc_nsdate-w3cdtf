@@ -26,6 +26,10 @@ int main(int argc, char **argv)
     [pool2 release];
   }
 
+  id now = [NSDate new];
+  NSLog([now description]);
+  NSLog([now getW3CDTFString]);
+
 //  [NSAutoreleasePool showPools];
   [pool release];
   return 0;

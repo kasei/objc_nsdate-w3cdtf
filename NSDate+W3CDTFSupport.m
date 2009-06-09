@@ -107,4 +107,16 @@
       [NSArray arrayWithObjects:@"timeString", @"offsetHour", @"offsetMin", nil]
   ];
 }
+
+-(NSString*) getW3CDTFString
+{
+  NSDateFormatter *dateFormatter = [NSDateFormatter new];
+
+  [dateFormatter setLocale:[NSLocale systemLocale]];
+  [dateFormatter setTimeStyle:NSDateFormatterFullStyle];
+  [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+  [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+
+  return [dateFormatter stringFromDate:self];
+}
 @end
