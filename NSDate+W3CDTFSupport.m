@@ -16,7 +16,8 @@
 @implementation NSDate (W3CDTFSupport)
 +(NSDate*) dateWithW3CDTFString:(NSString*)dateAndTimeFormat
 {
-  NSAutoreleasePool *pool = [NSAutoreleasePool new];
+  NSTimeInterval interval;
+  @autoreleasepool {
   NSRange separator = [dateAndTimeFormat rangeOfString:@"T"];
   NSString *timeString, *dateString;
 
@@ -81,10 +82,10 @@
   offsetHour = [[timeDictionary valueForKey:@"offsetHour"] intValue];
   offsetMin  = [[timeDictionary valueForKey:@"offsetMin"]  intValue];
   NSInteger offset = offsetSign * ((offsetHour * 3600) + (offsetMin * 60));
-  NSTimeInterval interval = [utcDate timeIntervalSinceReferenceDate] - offset;
+  interval = [utcDate timeIntervalSinceReferenceDate] - offset;
 
 //  [NSAutoreleasePool showPools];
-  [pool release];
+  }
   return [NSDate dateWithTimeIntervalSinceReferenceDate:interval];
 }
 
